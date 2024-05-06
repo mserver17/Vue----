@@ -1,47 +1,18 @@
 <template>
-  <div class="container">
-    <button 
-      @click="showModal = true" 
-      class="btn btn-form-send">
-      Написать комментарий
-    </button>
-    <dialog 
-      v-if="showModal" 
-      @close="closeModal" 
-      class="modal">
-      <form 
-        method="post" 
-        @submit.prevent="handleSubmit" 
-        class="modal-content">
-        <div class="form-body">
+   <div class="modal">
+    <dialog open class="modal-content">
+      <form @submit.prevent="handleSubmit">
+        <div class="form-content">
           <div class="input-group">
-            <div class="form-group">
-            <label for="username">Username:</label>
-            <input
-              placeholder="Ваше имя" 
-              type="text" 
-              id="username" 
-              v-model="comment.author" 
-              class="input-control" 
-              required />
+            <h3>Ответ на комментарий:</h3>
+            <input type="text" v-model="reply.author" class="input-control" placeholder="Ваше имя" required />
+            <textarea v-model="reply.text" class="input-control" placeholder="Напишите ответ" required></textarea>
           </div>
-          <div class="form-group">
-            <label for="message">Message:</label>
-            <textarea 
-              id="message"
-              v-model="comment.text" 
-              class="input-control" 
-              placeholder="Ваш комментарии" 
-              required>
-            </textarea>
-          </div>
-        </div>
-
-        <div class="reaction-group">
+      <div class="reaction-group">
           <label class="form__label">
             <span class="visually-hidden">Нравится</span>
             <input
-              v-model="comment.reaction"
+              v-model="reply.reaction"
               type="radio"
               name="reaction"
               value="1"
@@ -82,7 +53,7 @@
           <label class="form__label">
             <span class="visually-hidden"> Нейтрально </span>
             <input
-              v-model="comment.reaction"
+              v-model="reply.reaction"
               type="radio"
               required
               name="reaction"
@@ -118,7 +89,7 @@
           <label class="form__label">
             <span class="visually-hidden">Не нравится</span>
             <input
-              v-model="comment.reaction"
+              v-model="reply.reaction"
               type="radio"
               name="reaction"
               value="-1"
@@ -152,118 +123,87 @@
           </label>
         </div>
       </div>
-      <div class="actions">
-          <button 
-            type="submit" 
-            class="btn btn-form-send">
-            Отправить
-          </button>
-          <button 
-            @click="closeModal" 
-            class="btn btn-form-cancel">
-            Отмена
-          </button>
-      </div>
+        <div class="action-buttons">
+          <button type="submit" class="btn-form-send">Отправить ответ</button>
+          <button @click="$emit('close')" class="btn-form-cancel">Закрыть</button>
+        </div>
       </form>
     </dialog>
     <div v-if="toastsVisible" 
         :class="{'toast': true, 
                  'toast-success': toastType === 'success', 
                  'toast-error': toastType === 'error'}">
-                 {{ toastsContent }}
+        {{ toastsContent }}
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, defineProps, defineEmits, ref } from 'vue';
 import { useComments } from '../hooks/useComments';
 
+const props = defineProps({
+  parentId: Number
+});
+const emit = defineEmits(['close']); 
 const toastsContent = ref('');
 const toastsVisible = ref(false);
-const toastType = ref('');
-const dialogVisible = ref(false);
-const { postComment } = useComments(); 
+const toastType = ref('success'); 
+const { postReply } = useComments();
 
-const emit = defineEmits(['create'])
-const props = defineProps({
-  parentCommentId: {
-    type: Number,
-    defualt: null,
-  },
-  visible: {
-    type: Boolean,
-  },
-  sending: {
-    type: Boolean,
-  },
-})
-
-const comment = reactive({
+const reply = reactive({
   author: '',
   text: '',
   reaction: 0,
-  parentId: null,
+  parentId: props.parentId
 });
-const showModal = ref(false);
 
-function closeModal() {
-  showModal.value = false;
-  dialogVisible.value = false;
-}
-
-async function handleSubmit() {
-  if (comment.author.trim() && comment.text.trim()) {
+const handleSubmit = async () => {
+  if (reply.author.trim() && reply.text.trim()) {
     try {
-      await postComment(comment);
-      toastsContent.value = 'Комментарий успешно добавлен';
+      await postReply(reply);
+      toastsContent.value = 'Ответ на комментарий успешно добавлен';
       toastType.value = 'success';
       toastsVisible.value = true;
-      setTimeout(() => { toastsVisible.value = false; }, 3000);
-      comment.author = '';
-      comment.text = '';
-      showModal.value = false;
+      setTimeout(() => { toastsVisible.value = false; }, 3000); 
+      reply.author = '';
+      reply.text = '';
+      emit('close');
     } catch (error) {
-      toastsContent.value = `Ошибка: ${error.message}`;
+      toastsContent.value = `Ошибка при добавлении ответа: ${error.message}`;
       toastType.value = 'error';
       toastsVisible.value = true;
-      setTimeout(() => { toastsVisible.value = false; }, 5000);
-    } finally {
-      showModal.value = false; 
+      setTimeout(() => { toastsVisible.value = false; }, 5000); 
+      console.error('Failed to post reply:', error);
     }
   }
-}
+};
 </script>
 
 
 <style scoped>
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.form-body {
+.form-content {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start; 
 }
+
+.reaction-group {
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
 .input-group {
-  display: flex;
-  flex-direction: column;
-}
-.input-control {
-    width: 150%;
-  }
-.reactions {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;;
+  flex: 9;  
+  margin-right: 10px; 
 }
 
 .form__label {
-  margin-top: 15px;
   display: flex;
   align-items: center;
-  margin: 10px 0;
+  margin: 10px 0px;
   cursor: pointer;
 }
 .form__img {
@@ -286,13 +226,12 @@ async function handleSubmit() {
   font-size: 2rem;
 }
 .form__radio:checked + .form__img {
-  border-bottom: 2px solid #178506 ;
+  border-bottom: 2px solid #138308;
   opacity: 1;
   transition: all 0.2s linear;
   transform: scale(1.2);
 }
 .form__radio + .form__img {
-  opacity: 0.45;
+  opacity: 0.5;
 }
 </style>
-

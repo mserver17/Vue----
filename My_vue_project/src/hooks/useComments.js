@@ -1,50 +1,79 @@
-import { ref } from 'vue'
-import axios from 'axios'
+
+import { ref } from 'vue';
+import axios from 'axios';
+
+const baseURL = 'http://194.67.93.117:80/comments';
 
 export function useComments() {
-  const comments = ref([])
-  
+  const comments = ref([]);
+
   async function fetchComments() {
     try {
-      const response = await axios.get('http://194.67.93.117:80/comments')
-      comments.value = response.data.reverse()
+      const response = await axios.get(baseURL);
+      comments.value = response.data.reverse();
+      comments.value.forEach(comment => {
+        comment.repliesCount = comments.value.filter(c => c.parentId === comment.id).length;
+      });
     } catch (error) {
-      console.log(error)
+      console.error('Failed to fetch comments:', error);
     }
   }
 
-  async function postComments(comment, toastsContent, toastsVisible, dialogVisible) {
+  async function postComment(comment) {
     try {
-      const url = 'http://194.67.93.117:80/comments'
-      const commentBody = {
-        author: comment.author,
-        text: comment.text,
-        reaction: comment.reaction,
-        parentId: comment.parentId,
-      }
-
-      const response = await axios.post(url, commentBody, {
+      const response = await axios.post(baseURL, comment, {
         headers: {
           'Content-Type': 'application/json',
           Username: 'mserver17',
         },
-      })
-
-      comments.value.push(response.data);
-      toastsContent.value = 'Comment added successfully!';
-      toastsVisible.value = true;
-      dialogVisible.value = false;
+      });
+      comments.value.unshift(response.data);
+      return { success: true, message: 'Comment added successfully!' };
     } catch (error) {
-      toastsContent.value = `Error submitting comment: ${error.message}`;
-      toastsVisible.value = true;
-      console.log(error.message);
+      console.error('Error submitting comment:', error);
+      return { success: false, message: error.message };
+    }
+  }
+
+  async function postReply(reply) {
+    try {
+      const response = await axios.post(baseURL, {
+        author: reply.author,
+        text: reply.text,
+        parentId: reply.parentId 
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          Username: 'mserver17',  
+        },
+      });
+      if (response.data) {
+        comments.value.push(response.data); 
+      }
+    } catch (error) {
+      console.error('Error submitting reply:', error);
+    }
+  }
+  async function fetchReplies(commentId) {
+    try {
+      const url = `${baseURL}?parentId=${commentId}`;
+      const response = await axios.get(url);
+      console.log('Replies for comment', url); // Добавьте это для отладки
+      return response.data.length; // Подсчитываем количество ответов
+    } catch (error) {
+      console.error('Error fetching replies for comment', commentId, ':', error);
+      return 0;
     }
   }
 
   return {
     comments,
     fetchComments,
-    postComments,
+    postComment,
+    postReply,
+    fetchReplies
   }
 }
+
+
 
