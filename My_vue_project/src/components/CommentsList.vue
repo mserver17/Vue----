@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div class="comments" v-if="comments && comments.length">
       <h2>Список комментариев ({{ comments.length }})</h2>
       <ul class="container-commItem">
@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted} from 'vue';
 import CommentItem from './CommentItem.vue';
 import { useComments } from '../hooks/useComments';
 
@@ -41,7 +41,7 @@ onMounted(async () => {
   margin-top: 20px;
 }
 .commItem{
-  background-color: #ffd26a;
+  background-color: #f8d879;
   border: 1px solid #ffc233;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -51,18 +51,19 @@ onMounted(async () => {
 
 }
 .positive {
-  background-color: #9dff24;
+  background-color: #90dc61;
 }
 .negative {
-  background-color: #ff5744;
+  background-color: #fe5e4c;
 }
 .comments {
   margin-top: 20px;
   padding: 20px;
-  background-color: #fee08c;
+  background-color: #fde5a5;
+  border: 1px solid #432c01;
   border-radius: 30px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  width: 700px;
+  width: auto;
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-all;
@@ -70,7 +71,7 @@ onMounted(async () => {
 }
 
 .comments h2 {
-  color: #272626;
+  color: #6a3408;
   font-size: 20px;
   font-family: "Roboto", sans-serif;
   font-optical-sizing: auto;

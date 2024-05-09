@@ -1,6 +1,6 @@
 <template>
   <li :class="{'comment-item': true, positive: comment.reaction === 1, negative: comment.reaction === -1}" >
-    <div>
+    <div class="body-comment">
       <h3 class="name">~ {{ comment.author }}</h3> 
       <div class="container-text">
         <p class="text">{{ comment.text }}</p>
@@ -10,7 +10,8 @@
     <div class="info">
       <button 
         @click="showReplyForm = true" 
-        class="reply-button">
+        class="reply-button"
+        style="outline: none;" onfocus="this.style.outline='5px solid #00FFFF';" onblur="this.style.outline='none';">
         <span 
           class="material-symbols-outlined">
           reply
@@ -72,7 +73,7 @@ const formattedDate = computed(() => {
   margin-left: 40px;
   height: auto;
   width: auto;
-  background-color: #ffdf90;
+  background-color: #f9d989;
   padding: 2px 15px 25px 25px;
   border-radius: 0px 10px 10px 30px;
 }
@@ -91,7 +92,7 @@ const formattedDate = computed(() => {
   margin-left: 25px;
 }
 .reply-button {
-  background-color: #248c28; 
+  background-color: #84501c; 
   color: white; 
   border: none;
   padding: 0px 12px;
@@ -105,7 +106,7 @@ const formattedDate = computed(() => {
   transition: background-color 0.5s;
 }
 .reply-button:hover {
-  background-color: #115215;
+  background-color: #422507;
 }
 .material-symbols-outlined {
   font-variation-settings:

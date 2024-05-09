@@ -1,4 +1,3 @@
-
 import { ref } from 'vue';
 import axios from 'axios';
 
@@ -40,7 +39,9 @@ export function useComments() {
       const response = await axios.post(baseURL, {
         author: reply.author,
         text: reply.text,
-        parentId: reply.parentId 
+        reaction: reply.reaction,
+        parentId: reply.parentId
+         
       }, {
         headers: {
           'Content-Type': 'application/json',
@@ -54,24 +55,24 @@ export function useComments() {
       console.error('Error submitting reply:', error);
     }
   }
-  async function fetchReplies(commentId) {
-    try {
-      const url = `${baseURL}?parentId=${commentId}`;
-      const response = await axios.get(url);
-      console.log('Replies for comment', url); // Добавьте это для отладки
-      return response.data.length; // Подсчитываем количество ответов
-    } catch (error) {
-      console.error('Error fetching replies for comment', commentId, ':', error);
-      return 0;
-    }
-  }
+  // async function fetchReplies(commentId) {
+  //   try {
+  //     const url = `${baseURL}?parentId=${commentId}`;
+  //     const response = await axios.get(url);
+  //     console.log('Replies for comment', url); 
+  //     return response.data.length;
+  //   } catch (error) {
+  //     console.error('Error fetching replies for comment', commentId, ':', error);
+  //     return 0;
+  //   }
+  // }
 
   return {
     comments,
     fetchComments,
     postComment,
     postReply,
-    fetchReplies
+    // fetchReplies
   }
 }
 
