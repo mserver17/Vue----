@@ -12,7 +12,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     rollupOptions: {
-      external: ['vue-router']
+      external: ['vue-router', 'axios']
     }
   },
   resolve: {
