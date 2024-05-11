@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { reactive, defineEmits, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { useComments } from '../hooks/useComments';
 import ReactionSelector from './ReactionSelector.vue';
 
