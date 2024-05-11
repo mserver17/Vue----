@@ -48,7 +48,7 @@ onUnmounted(() => {
 
 <style>
 #app {
-  background-color: #ffe8aa; 
+  background-color: #ffeec1; 
   min-height: 100vh;
   display: flex;
   justify-content: center;
