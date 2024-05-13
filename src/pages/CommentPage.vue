@@ -18,5 +18,8 @@ const handleCommentAdded = (newComment) => {
 </script>
 
 <style scoped>
-
+h1{
+  color: rgb(97, 59, 25);
+  font-family: "Montserrat", sans-serif;
+}
 </style>

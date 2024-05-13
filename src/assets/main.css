@@ -70,6 +70,8 @@ nav {
   align-items: center;
   width: 100%;
   max-width: 1440px;
+  font-family: "Montserrat", sans-serif;
+
 }
 .router-link {
   text-decoration: none;
@@ -81,66 +83,73 @@ nav {
   text-decoration: underline;
 }
 
-      @media (max-width: 670px){
-          .burger {
-            display: flex;
-          }
-          nav {
-              display: none;
-              flex-direction: column;
-              /* justify-content:space-evenly; */
-              position:relative;
-              height: 24%;
-              width: 30%;
-              top: 0; bottom: 0; left: 0; right: 0;
-              z-index: 30;
-              overflow-y: auto;
-              padding: 0px 0px;
-              background-color: #ffcd60;
-              animation: burgerAnimation 0.5s;
-              padding-top: 35px;
-              border: 1px solid #63390f;
-              border-radius: 0px 5px 70px;
-              overflow-x: hidden;
-              top: 0;
-          }
-          .router-link {
-            text-decoration: none;
-            text-align:center;
-            margin: 0 15px;
-            color: #7a4d1a;
-            font-size: 19px;
-            margin-right: 23px;
-            }
-           
-            .open{
-              display: flex !important;
-              text-align: start;
-            }
-            header{
-              margin-bottom:  10px;
-            }
-          
-      }
-      @media (max-width: 480px){
-        .router-link {
-          text-decoration: none;
-          text-align:center;
-          margin: 0 2px;
-          color: #7a4d1a;
-          font-size: 17px;
-          }
-          nav {
-            display: none;
-            flex-direction: column;
-            justify-content:space-evenly;
-            position:fixed;
-            height: 35%;
-            width: 30%;
-            padding-top: 30px;
-            margin-bottom: 0%;
-        }
-      }
+@media (max-width: 730px){
+    .burger {
+      display: flex;
+    }
+    nav {
+        display: none;
+        flex-direction: column;
+        /* justify-content:space-evenly; */
+        position:fixed;
+        height: 35%;
+        width: 39%;
+        top: 0; bottom: 0; left: 0; right: 0;
+        z-index: 30;
+        overflow-y: auto;
+        padding: 0px 0px;
+        background-color: #fde5a5;
+        animation: burgerAnimation 0.5s;
+        padding-top: 35px;
+        border: 1px solid #63390f;
+        border-radius: 0px 5px 70px;
+        overflow-x: hidden;
+        top: 0;
+        
+    } 
+    .router-link {
+      text-decoration: none;
+      text-align:center;
+      margin: 0 15px;
+      color: #7a4d1a;
+      font-size: 19px;
+      margin-right: 23px;
+      transition: transform 0.3s ease
+    }
+    .router-link :hover {
+      transform: translateY(-3px); /* Изменение позиции элемента при наведении */
+    }          
+    .open{
+      display: flex !important;
+      text-align: start;
+    }
+    header{
+      margin-bottom:  10px;
+    }
+}
+@media (max-width: 480px){
+  nav {
+    display: none;
+    flex-direction: column;
+    justify-content:space-evenly;
+    position:fixed;
+    height: 35%;
+    width: 50%;
+    padding-top: 40px;
+    margin-bottom: 0%;
+    transition: transform 0.3s ease
+  }
+  nav :hover {
+    transform: translateY(-3px); 
+  }
+  .router-link {
+    text-decoration: none;
+    text-align:center;
+    margin: 0 2px;
+    color: #7a4d1a;
+    font-size: 19px;
+    }
+}
 @keyframes burgerAnimation {
   from{opacity: 0;}
   to{opacity: 1;}

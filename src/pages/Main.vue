@@ -26,6 +26,8 @@
   
   h1 {
     margin-bottom: 20px;
+    color: rgb(97, 59, 25);
+    font-family: "Montserrat", sans-serif;
   }
   
   button {
