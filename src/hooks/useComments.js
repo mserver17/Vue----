@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import axios from 'axios';
+import axios from '/axios';
 
 const baseURL = 'http://194.67.93.117:80/comments';
 
